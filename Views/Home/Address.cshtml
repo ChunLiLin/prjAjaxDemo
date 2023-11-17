@@ -1,0 +1,92 @@
+﻿
+@{
+    ViewData["Title"] = "Address";
+}
+
+<h1>Address</h1>
+
+<select id="selectCity"></select>
+<select id="selectDistrict"></select>
+<select id="selectRoad"></select>
+
+@section Scripts
+{
+    <script>
+        const selCity = document.querySelector('#selectCity');
+        const selDistrict = document.querySelector('#selectDistrict');
+        const selRoad = document.querySelector('#selectRoad');
+
+        selCity.addEventListener('change',()=>{
+            loadDistrict();
+        });
+        selDistrict.addEventListener('change',()=>{
+            loadRoad();
+            console.log(selDistrict.value)
+        });
+        //====作業三=======
+
+        //function loadCity(){
+        //    const xhr = new XMLHttpRequest();
+        //    xhr.addEventListener('load',()=>{
+        //        const datas = JSON.parse(xhr.responseText);
+        //        const cities = datas.map(city =>`<option value="${city}">${city}</option>`);
+        //        selCity.innerHTML = cities.join("");
+        //        loadDistrict();
+        //    });
+        //    xhr.open('GET', '@Url.Content("~/api/cities")');
+        //    xhr.send();
+        //}
+
+        async function loadCity(){
+            const response = await fetch('@Url.Content("~/api/cities")');
+            const data = await response.json();
+            const cities = data.map(city => `<option value="${city}">${city}</option>`);
+            selCity.innerHTML = cities.join("");
+            loadDistrict();
+        }
+
+        //================
+        //function loadDistrict() {
+        //    const xhr = new XMLHttpRequest();
+        //    xhr.addEventListener('load', () => {
+        //        const datas = JSON.parse(xhr.responseText);
+        //        const districts = datas.map(district => `<option value="${district}">${district}</option>`);
+        //        selDistrict.innerHTML = districts.join("");
+        //        loadRoad();
+        //    });
+        //    xhr.open('GET', `@Url.Content("~/api/districts")?city=${selCity.value}`);
+        //    xhr.send();
+        //}
+
+        async function loadDistrict() {
+            const response = await fetch(`@Url.Content("~/api/districts")?city=${selCity.value}`);
+            const data = await response.json();
+            const districts = data.map(district => `<option value="${district}">${district}</option>`);
+            selDistrict.innerHTML = districts.join("");
+            loadRoad();
+        }
+
+        //=================
+        //function loadRoad() {
+        //    const xhr = new XMLHttpRequest();
+        //    xhr.addEventListener('load', () => {
+        //        const datas = JSON.parse(xhr.responseText);
+        //        const roads = datas.map(road => `<option value="${road}">${road}</option>`);
+        //        selRoad.innerHTML = roads.join("");
+        //    });
+        //    xhr.open('GET', `@Url.Content("~/api/roads")?siteId=${selDistrict.value}`);
+        //    xhr.send();
+        //}
+
+        async function loadRoad() {
+            const response = await fetch(`@Url.Content("~/api/roads")?siteId=${selDistrict.value}`);
+            const data = await response.json();
+            const roads = data.map(road => `<option value="${road}">${road}</option>`);
+            selRoad.innerHTML = roads.join("");
+            loadRoad();
+        }
+
+        loadCity();
+        
+    </script>
+}

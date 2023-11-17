@@ -1,0 +1,62 @@
+﻿
+@{
+    ViewData["Title"] = "First";
+}
+
+<h1>First</h1>
+<button id="btnStart" class="btn btn-primary">Ajax Start</button>
+<button id="btnStop" class="btn btn-primary">Ajax Stop</button>
+<img id="img1" style="display:none" src="~/images/Skateboarding.gif" />
+<div id="div1" class="alert alert-info"></div>
+
+@section Scripts
+{
+    <script src="~/datas/travel.js"></script>
+    <script>
+        console.log(spots);
+        const btnStart = document.querySelector('#btnStart');
+        const btnStop = document.querySelector('#btnStop');
+        const theDiv = document.querySelector('#div1');
+        const imgLoading = document.querySelector('#img1');
+        const xhr = new XMLHttpRequest();
+
+        btnStop.addEventListener('click', () => {
+            xhr.abort();//停止ajax程式
+        })
+
+        btnStart.addEventListener('click',()=>{
+            xhr.addEventListener('loadstart', () => {                
+                imgLoading.style.display = "inline";
+                btnStart.setAttribute('disabled', 'disabled');
+                btnStart.innerHTML = "Loading...";
+                theDiv.innerHTML += "Ajax開始<br />"
+            })
+
+            xhr.addEventListener('loadend', () => {                
+                imgLoading.style.display = "none";
+                btnStart.removeAttribute("disabled");
+                btnStart.innerHTML = "Ajax Start";
+                theDiv.innerHTML += "Ajax結束<br />"
+            })
+
+            xhr.addEventListener('load', () => {
+                const data = xhr.responseText;
+                theDiv.innerHTML += data + '<br />';
+            })
+
+            //timeout時間到會觸發此事件
+            xhr.addEventListener('timeout', () => {
+                theDiv.innerHTML += '伺服器忙碌中，請稍後再來<br />';
+            })
+
+            //abort方法被呼叫會觸發此事件
+            xhr.addEventListener('abort', () => {
+                theDiv.innerHTML += '您停止了程式的執行<br />';
+            })
+
+            xhr.open('GET','@Url.Content("~/Api/Index")?name=Tony&age=108');
+            /*xhr.timeout = 3000;*/ //要設定在open()方法之後
+            xhr.send();           
+        })
+    </script>
+}

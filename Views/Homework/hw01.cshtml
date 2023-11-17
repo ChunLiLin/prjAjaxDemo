@@ -1,0 +1,41 @@
+﻿
+@{
+    ViewData["Title"] = "hw01";
+}
+@section Styles{
+
+}
+
+<h1>hw01</h1>
+<div id="div1"></div>
+
+@section Scripts{
+    <script src="~/datas/travel.js"></script>
+    <script>
+        //console.log(spots);
+        const datas = spots.CommonFormat.Section.map(x => {
+            const { stitle, xbody, file } = x;
+            if(x.file)
+                if(x.file.img)
+                    if(x.file.img[0])
+                        if(x.file.img[0].text)
+                        {   
+                            const imgpath = x.file.img[0].text;
+                            const subBody = x.xbody.substr(0,50);
+                            return(
+                                `
+                                    <div class="card" style="width: 18rem;">
+                                        <img src="${imgpath}" class="card-img-top" alt="...">
+                                        <h5 class="card-title">${stitle}</h5>
+                                        <div class="card-body">
+                                            <p class="card-text">${subBody}</p>
+                                        </div>
+                                    </div>
+                                `
+                            )
+                        }
+            
+        })
+        document.querySelector('#div1').innerHTML = datas.join("");
+    </script>
+}
