@@ -50,7 +50,9 @@
             })            
         })
         $('#buttonCors').click(function () {
-            $('#divAlert').text("CORs")
+            $.getJSON('https://localhost:7150/api/Shippers',(datas)=>{
+                console.log(datas);//
+            })
         })
 
     </script>
